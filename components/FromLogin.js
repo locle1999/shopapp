@@ -32,18 +32,21 @@ export default class FromLogin extends Component {
         deviceid: "",
         password: ""
     }
-    async componentDidMount() {
-        let uniqueId = deviceInfoModule.getUniqueId()
-        this.setState({
-            os: Platform.OS,
-            deviceid: uniqueId,
-        })
-    }
+    // async componentDidMount() {
+    //     let uniqueId = deviceInfoModule.getUniqueId()
+    //     this.setState({
+    //         os: Platform.OS,
+    //         deviceid: uniqueId,
+    //     })
+    // }
 
     handleClick = () => {
+        let uniqueId = deviceInfoModule.getUniqueId()
         const user = JSON.stringify({
             "username": this.state.username,
-            "password": this.state.password
+            "password": this.state.password,
+            os: Platform.OS,
+            deviceid: uniqueId,
         })
         console.log("check user", user)
         axios({
