@@ -18,11 +18,13 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
+    Platform
 } from 'react-native';
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
-
+import axios from 'axios';
+import deviceInfoModule from 'react-native-device-info';
 export default class FromLogin extends Component {
     state = {
         username: "",
@@ -30,7 +32,38 @@ export default class FromLogin extends Component {
         deviceid: "",
         password: ""
     }
+    async componentDidMount() {
+        let uniqueId = deviceInfoModule.getUniqueId()
+        this.setState({
+            os: Platform.OS,
+            deviceid: uniqueId,
+        })
+    }
+
+    handleClick = () => {
+        const user = JSON.stringify({
+            "username": this.state.username,
+            "password": this.state.password
+        })
+        console.log("check user", user)
+        axios({
+            method: 'post',
+            url: 'http://nrms.ipicorp.co:10003/userservice/user/login_s2',
+            data: user,
+            headers: {
+                "content-type": "application/json",
+            }
+        })
+            .then(function (response) {
+                let userToken = response.data
+                console.log("check res :", userToken);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
     render() {
+        console.log("check state :", this.state)
         return (
             <>
 
@@ -76,9 +109,13 @@ export default class FromLogin extends Component {
                         placeholder="Mật khẩu "
                         onChangeText={(password) => { this.setState({ password }) }}
                         value={this.state.password}
+                        secureTextEntry={true}
                     />
                     <View style={[styles.line2]}></View>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={this.handleClick}
+
+                    >
                         <View style={[styles.button]}>
                         </View>
                         <Text style={[styles.text2]}> ĐĂNG NHẬP</Text>
