@@ -27,14 +27,18 @@ import {
 import IView from "./components/IView"
 import Product from "./components/Product"
 import FromLogin from './components/FromLogin';
+import Nav from './components/Nav';
+import ListProduct from './components/ListProduct';
 const App = () => {
 
   return (
     <>
-      <IView>
-        {/* <Product></Product> */}
-        <FromLogin />
-      </IView>
+
+      <Nav />
+      {/* <FromLogin /> */}
+      {/* <Product /> */}
+
+
     </>
   );
 };

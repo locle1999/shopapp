@@ -23,31 +23,31 @@ import {
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
-import DeviceInfo from 'react-native-device-info';
-import { getUniqueId, getManufacturer } from 'react-native-device-info';
+import Product from './Product';
+import FromLogin from './FromLogin';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Product from './Product';
+import ListProduct from './ListProduct';
 const Stack = createNativeStackNavigator();
+
 export default class Nav extends Component {
     render() {
         return (
-            <>
-                <NavigationContainer>
-                    <Stack.Navigator>
-                        <Stack.Screen name="Vật tư nông nghiệp" component={Product}
-                            options={{
-                                headerRight: () => (
-                                    <TouchableOpacity>
-                                        <Image style={{ width: 18, height: 16 }} source={require("../public/icon-shopping.png")} />
-                                    </TouchableOpacity>
-                                )
-                            }}
-                        />
-                    </Stack.Navigator>
-                </NavigationContainer>
+            <NavigationContainer>
+                <Stack.Navigator >
+                    <Stack.Screen
+                        name="Login"
+                        component={FromLogin}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    <Stack.Screen name="ListProduct" component={ListProduct} />
+                </Stack.Navigator>
+            </NavigationContainer>
 
-            </>
+
+
         )
     }
 }

@@ -30,18 +30,12 @@ export default class FromLogin extends Component {
         username: "",
         os: "",
         deviceid: "",
-        password: ""
+        password: "",
+        token: ""
     }
-    // async componentDidMount() {
-    //     let uniqueId = deviceInfoModule.getUniqueId()
-    //     this.setState({
-    //         os: Platform.OS,
-    //         deviceid: uniqueId,
-    //     })
-    // }
-
     handleClick = () => {
         let uniqueId = deviceInfoModule.getUniqueId()
+        let { navigation } = this.props
         const user = JSON.stringify({
             "username": this.state.username,
             "password": this.state.password,
@@ -49,7 +43,7 @@ export default class FromLogin extends Component {
             deviceid: uniqueId,
         })
         console.log("check user", user)
-        axios({
+        const res = axios({
             method: 'post',
             url: 'http://nrms.ipicorp.co:10003/userservice/user/login_s2',
             data: user,
@@ -57,15 +51,35 @@ export default class FromLogin extends Component {
                 "content-type": "application/json",
             }
         })
-            .then(function (response) {
+            .then(response => {
                 let userToken = response.data
+                if (userToken.data.username) {
+                    alert("Đăng nhập thành công")
+                    this.setState({
+                        token: userToken.data.token
+                    })
+                    navigation.navigate("ListProduct", {
+                        username: this.state.username,
+                        os: this.state.os,
+                        deviceid: this.state.deviceid,
+                        token: this.state.token
+                    })
+                }
+                else {
+                    alert("sai mật khẩu ")
+                }
                 console.log("check res :", userToken);
             })
-            .catch(function (error) {
+            .catch(error => {
                 console.log(error);
             })
+        this.setState({
+            os: Platform.OS,
+            deviceid: uniqueId,
+        })
     }
     render() {
+
         console.log("check state :", this.state)
         return (
             <>
@@ -106,7 +120,6 @@ export default class FromLogin extends Component {
                             color: "#FFFFFF",
                             width: 149,
                             position: "absolute",
-
                             marginTop: 19
                         }}
                         placeholder="Mật khẩu "
