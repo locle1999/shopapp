@@ -14,7 +14,8 @@ export default class ListProduct extends Component {
         cate_id: 9,
         page: 1,
         allow_guest_view_price: true,
-        Product: []
+        Product: [],
+        arrProduct: []
     }
     componentDidMount() {
         const { username, token, deviceid, os } = this.props.route.params
@@ -36,13 +37,12 @@ export default class ListProduct extends Component {
                 page: 1,
                 allow_guest_view_price: true
             },
-
             headers: {
                 "content-type": "application/json",
             }
         })
             .then(response => {
-                // console.log("check res product :", response);
+                console.log("check res product :", response);
                 this.setState({
                     Product: response.data.data
                 })
@@ -51,11 +51,19 @@ export default class ListProduct extends Component {
                 console.log(error);
             })
     }
-    render() {
+    addProduct = (aProduct) => {
+        console.log("check add product", aProduct)
+        if (this.state.arrProduct.find(e => e.id === aProduct.id)) {
+            alert("sản phẩm đã có trong giỏ hàng")
+        } else {
 
-        // const { username } = this.props.route.params
-        console.log(" check state after login", this.state)
-        //console.log(" check Product", this.state.Product)
+            this.setState({
+                arrProduct: [...this.state.arrProduct, aProduct],
+            })
+        }
+    }
+    render() {
+        console.log(" check arrProduct", this.state.arrProduct)
         return (
             <>
                 <IView style={{
@@ -67,8 +75,15 @@ export default class ListProduct extends Component {
                         keyExtractor={item => item.id}
                         renderItem={({ item, index }) => {
                             return (
-                                <Product product={this.state.Product}
-                                    item={item} index={index} >
+                                <Product product={this.state.arrProduct}
+                                    item={item}
+                                    index={index}
+                                    addProduct={this.addProduct}
+                                    username={this.state.username}
+                                    os={this.state.os}
+                                    deviceid={this.state.deviceid}
+                                    token={this.state.token}
+                                >
                                 </Product>
                             )
                         }}

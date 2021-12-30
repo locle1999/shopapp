@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import ILayoutProps from "./ILayoutProps";
 import FastImage from "react-native-fast-image";
-import { images } from "../../assets";
+import { images } from "../public";
 
 const IFastImage = props => {
   var newProps = { ...props };

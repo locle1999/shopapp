@@ -42,7 +42,50 @@ export default class Nav extends Component {
                             headerShown: false
                         }}
                     />
-                    <Stack.Screen name="ListProduct" component={ListProduct} />
+                    <Stack.Screen
+                        name="ListProduct"
+                        component={ListProduct}
+                        options={{
+                            headerRight: () => (
+                                <TouchableOpacity>
+                                    <IView style={{
+                                        top: 5,
+                                        width: 40,
+                                        height: 40,
+                                        flexWrap: "wrap",
+                                        alignSelf: "center"
+                                    }}>
+                                        <Image
+                                            style={{
+                                                position: "absolute",
+                                                top: 5.5,
+                                                left: 10
+                                            }}
+                                            source={require("../public/icon-shopping.png")} />
+                                        <IView style={{
+                                            top: 1,
+                                            backgroundColor: "red",
+                                            width: 15,
+                                            height: 15,
+                                            borderRadius: 100 / 2,
+                                            position: "absolute",
+                                            alignSelf: "flex-end"
+                                        }}>
+                                            <IText style={{
+                                                position: "absolute",
+                                                color: "#fff",
+                                                top: 1,
+                                                alignSelf: "center",
+                                                bottom: 3,
+                                                fontSize: 9
+                                            }}> 1</IText>
+                                        </IView>
+                                    </IView>
+                                </TouchableOpacity>
+                            )
+
+                        }}
+                    />
                 </Stack.Navigator>
             </NavigationContainer>
 
@@ -52,42 +95,3 @@ export default class Nav extends Component {
     }
 }
 
-const Data = [
-    {
-        id: '1',
-        image: "https://nongduocxanh.com/wp-content/uploads/2020/04/sach-ray.jpg",
-        titile: "Admitox 100SL – Sạch rầy hiệu quả",
-        price: "300,000đ"
-    },
-    {
-        id: '2',
-        image: "https://nongduocxanh.com/wp-content/uploads/2020/04/sach-ray.jpg",
-        titile: "Admitox 100SL – Sạch rầy hiệu quả",
-        price: '400.000đ'
-    },
-    {
-        id: '3',
-        image: "https://nongduocxanh.com/wp-content/uploads/2020/04/sach-ray.jpg",
-        titile: "Admitox 100SL – Sạch rầy hiệu quả",
-        price: '200.000đ'
-    },
-    {
-        id: '4',
-        image: "https://nongduocxanh.com/wp-content/uploads/2020/04/sach-ray.jpg",
-        titile: "Admitox 100SL – Sạch rầy hiệu quả",
-        price: '250.000đ'
-    },
-    {
-        id: '5',
-        image: "https://nongduocxanh.com/wp-content/uploads/2020/04/sach-ray.jpg",
-        titile: "Admitox 100SL – Sạch rầy hiệu quả",
-        price: '200.000đ'
-    },
-    {
-        id: '6',
-        image: "https://nongduocxanh.com/wp-content/uploads/2020/04/sach-ray.jpg",
-        titile: "Admitox 100SL – Sạch rầy hiệu quả",
-        price: '250.000đ'
-    },
-
-]

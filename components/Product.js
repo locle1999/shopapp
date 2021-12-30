@@ -25,43 +25,66 @@ import axios from 'axios'
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
-import IFastImage from './IFastImage';
+
 export default class Product extends Component {
     state = {
-        aProduct: {
-            event_id: "",
-            id: "",
-            image: "",
-            is_new: "",
-            max_unit: "",
-            max_unit_quantity: "",
-            min_unit: "",
-            name: "",
-            np_id: "",
-            old_price: "",
-            p_price: "",
-            point: "",
-            price: "",
-            price_max_unit: "",
-            pv_price: "",
-            region_id: "",
-            stock: "",
-            variation_group: "",
-            vat: ""
-        },
+        product_id: "",
         quality: 0,
         ative: true,
-    }
 
+    }
     onPress = () => {
-        // this.setState({
-        //     ative: false
-        // })
+        const { username, token, deviceid, os, product } = this.props
+        let { item } = this.props
+        const dataProduct = JSON.stringify({
+            username: username,
+            token: token,
+            deviceid: deviceid,
+            os: os,
+            type_unit: 1,
+            attribute: "[]",
+            quantity: 1,
+            product_id: item.id
+        })
+        axios({
+            method: 'post',
+            url: 'http://nrms.ipicorp.co:10003/orderservice/order/add_product_to_cart',
+            data: dataProduct,
+            headers: {
+                "content-type": "application/json",
+            }
+        })
+            .then(response => {
+                console.log("check res product :", response);
+                // this.setState({
+                //     Product: response.data.data
+                // })
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        this.props.addProduct({
+            id: item.id,
+            image: item.image,
+            name: item.name,
+            price: item.price
+        })
+        this.setState({
+            product_id: item.id,
+            ative: false,
+            username: username,
+            token: token,
+            deviceid: deviceid,
+            os: os,
+            quality: this.state.quality + 1
+
+        })
+        console.log("check lai product", product)
     }
     render() {
+        console.log("check state  product", this.state)
         return (
             <>
-
                 <IView style={{
                     marginLeft: 16,
                     marginBottom: 10,
@@ -72,7 +95,7 @@ export default class Product extends Component {
                     borderColor: '#D8DBDC',
                     borderWidth: 1,
                 }}>
-                    <IFastImage style={{
+                    <Image style={{
                         position: "absolute",
                         height: 133,
                         width: 131,
@@ -119,7 +142,7 @@ export default class Product extends Component {
                             fontWeight: '900',
                             left: 0
                         }}>
-                            {this.props.item.old_price}
+                            {this.props.item.price}
                         </IText>
                         <TouchableOpacity
                             onPress={() => this.onPress()}  >

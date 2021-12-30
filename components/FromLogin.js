@@ -37,8 +37,8 @@ export default class FromLogin extends Component {
         let uniqueId = deviceInfoModule.getUniqueId()
         let { navigation } = this.props
         const user = JSON.stringify({
-            "username": this.state.username,
-            "password": this.state.password,
+            username: this.state.username,
+            password: this.state.password,
             os: Platform.OS,
             deviceid: uniqueId,
         })
