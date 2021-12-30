@@ -25,6 +25,7 @@ import axios from 'axios'
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
+import IFastImage from './IFastImage';
 export default class Product extends Component {
     state = {
         aProduct: {
@@ -71,7 +72,7 @@ export default class Product extends Component {
                     borderColor: '#D8DBDC',
                     borderWidth: 1,
                 }}>
-                    <Image style={{
+                    <IFastImage style={{
                         position: "absolute",
                         height: 133,
                         width: 131,
