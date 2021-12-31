@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, FileList, FlatList } from 'react-native'
+import { View, Text, FileList, FlatList, Button, TouchableOpacity, Image } from 'react-native'
 import axios from 'axios'
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
 import Product from './Product';
+import shopping from './shopping';
 export default class ListProduct extends Component {
     state = {
         username: "",
@@ -18,6 +19,7 @@ export default class ListProduct extends Component {
         arrProduct: []
     }
     componentDidMount() {
+        const { navigation } = this.props
         const { username, token, deviceid, os } = this.props.route.params
         this.setState({
             username: username,
@@ -50,13 +52,56 @@ export default class ListProduct extends Component {
             .catch(error => {
                 console.log(error);
             })
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("Giỏ Hàng", {
+                        username: this.state.username,
+                        os: this.state.os,
+                        deviceid: this.state.deviceid,
+                        token: this.state.token
+                    })}
+                >
+                    <IView style={{
+                        top: 5,
+                        width: 40,
+                        height: 40,
+                        flexWrap: "wrap",
+                        alignSelf: "center"
+                    }}>
+                        <Image
+                            style={{
+                                position: "absolute",
+                                top: 5.5,
+                                left: 10
+                            }}
+                            source={require("../public/icon-shopping.png")} />
+                        <IView style={{
+                            top: 1,
+                            backgroundColor: "red",
+                            width: 15,
+                            height: 15,
+                            borderRadius: 100 / 2,
+                            position: "absolute",
+                            alignSelf: "flex-end"
+                        }}>
+                            <IText style={{
+                                position: "absolute",
+                                color: "#fff",
+                                top: 1,
+                                alignSelf: "center",
+                                bottom: 3,
+                                fontSize: 9
+                            }}> 1</IText>
+                        </IView>
+                    </IView>
+                </TouchableOpacity>
+            ),
+        })
     }
     addProduct = (aProduct) => {
         console.log("check add product", aProduct)
-        if (this.state.arrProduct.find(e => e.id === aProduct.id)) {
-            alert("sản phẩm đã có trong giỏ hàng")
-        } else {
-
+        if (this.state.arrProduct.find(e => e.id !== aProduct.id)) {
             this.setState({
                 arrProduct: [...this.state.arrProduct, aProduct],
             })

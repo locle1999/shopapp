@@ -10,7 +10,8 @@ import {
     Image,
     ImageBackground,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    Modal
 } from 'react-native';
 
 import {
@@ -31,7 +32,7 @@ export default class Product extends Component {
         product_id: "",
         quality: 0,
         ative: true,
-
+        modalVisible: false
     }
     onPress = () => {
         const { username, token, deviceid, os, product } = this.props
@@ -56,9 +57,6 @@ export default class Product extends Component {
         })
             .then(response => {
                 console.log("check res product :", response);
-                // this.setState({
-                //     Product: response.data.data
-                // })
             })
             .catch(error => {
                 console.log(error);
@@ -76,10 +74,17 @@ export default class Product extends Component {
             token: token,
             deviceid: deviceid,
             os: os,
-            quality: this.state.quality + 1
-
+            quality: this.state.quality + 1,
         })
+        if (this.state.ative === false) {
+            this.setState({
+                modalVisible: true
+            })
+        }
         console.log("check lai product", product)
+    }
+    setModal = (visible) => {
+        this.setState({ modalVisible: visible })
     }
     render() {
         console.log("check state  product", this.state)
@@ -144,6 +149,73 @@ export default class Product extends Component {
                         }}>
                             {this.props.item.price}
                         </IText>
+                        <Modal
+                            visible={this.state.modalVisible}
+                            animationType='fade'
+                            transparent={true}
+                            onRequestClose={() => {
+                                Alert.alert("Modal has been closed.");
+                                this.setModal(!modalVisible);
+                            }}
+                        >
+                            <IView style={{
+                                flex: 1,
+                                backgroundColor: 'rgba(0,0,0,0.5)',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                                <IView style={{
+                                    position: "absolute",
+                                    width: 350,
+                                    height: 152,
+                                    left: 16,
+                                    top: 264,
+                                    backgroundColor: "#FFFFFF",
+                                    borderRadius: 10
+                                }}>
+                                    <IText style={{
+                                        color: "#369E69",
+                                        textAlign: "center",
+                                        fontSize: 16,
+                                        lineHeight: 19,
+                                        fontFamily: "Roboto",
+                                        fontWeight: '400',
+                                        marginTop: 16,
+                                        marginBottom: 6
+                                    }}> Thông Báo
+                                    </IText>
+                                    <IText style={{
+                                        color: "#3C3F3D",
+                                        textAlign: "center",
+                                        fontSize: 14,
+                                        lineHeight: 16,
+                                        fontFamily: "Roboto",
+                                    }}> Sản phẩm đã có trong giỏ hàng
+                                    </IText>
+                                    <IText style={{
+                                        color: "#3C3F3D",
+                                        textAlign: "center",
+                                        fontSize: 14,
+                                        lineHeight: 16,
+                                        fontFamily: "Roboto",
+                                        marginBottom: 16
+                                    }}> Vui lòng kiểm tra lại
+                                    </IText>
+
+                                    <TouchableOpacity
+                                        style={[styles.button]}
+                                        onPress={() => this.setModal(!this.state.modalVisible)}
+                                    >
+                                        <Text style={{
+                                            color: "#FFFFFF",
+                                            alignSelf: "center",
+                                            fontWeight: '700',
+                                            top: 12
+                                        }}>Xác nhận</Text>
+                                    </TouchableOpacity>
+                                </IView>
+                            </IView>
+                        </Modal>
                         <TouchableOpacity
                             onPress={() => this.onPress()}  >
                             <IView style={{
@@ -158,7 +230,7 @@ export default class Product extends Component {
 
                         </TouchableOpacity>
                     </IView>
-                </IView>
+                </IView >
 
             </>
         )
@@ -166,5 +238,13 @@ export default class Product extends Component {
 }
 const styles = StyleSheet.create({
 
-
+    button: {
+        position: "absolute",
+        width: 165,
+        height: 48,
+        left: 90,
+        top: 80,
+        backgroundColor: "#369E69",
+        borderRadius: 63
+    }
 })
