@@ -107,6 +107,7 @@ export default class ListProduct extends Component {
             })
         }
     }
+
     render() {
         console.log(" check arrProduct", this.state.arrProduct)
         return (

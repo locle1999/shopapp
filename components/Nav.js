@@ -46,10 +46,9 @@ export default class Nav extends Component {
                     <Stack.Screen
                         name="ListProduct"
                         component={ListProduct}
-                        options={
-                            ({ navigation, route }) => ({
-                                // headerTitle: props => <LogoTitle />,
-                            })}
+                        options={{
+                            title: "Vật tư nông nghiệp"
+                        }}
                     />
                     <Stack.Screen name='Giỏ Hàng' component={shopping} />
                 </Stack.Navigator>
