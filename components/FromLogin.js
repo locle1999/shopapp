@@ -25,65 +25,40 @@ import IView from "./IView"
 import IText from './IText';
 import axios from 'axios';
 import deviceInfoModule from 'react-native-device-info';
-export default class FromLogin extends Component {
+import { connect } from 'react-redux';
+import { Login } from '../store/action/listAction';
+class FromLogin extends Component {
     state = {
-        username: "",
         os: "",
         deviceid: "",
+        username: "",
         password: "",
         token: ""
     }
     handleClick = () => {
+
         let uniqueId = deviceInfoModule.getUniqueId()
-        let { navigation } = this.props
-        const user = JSON.stringify({
-            username: this.state.username,
-            password: this.state.password,
-            os: Platform.OS,
-            deviceid: uniqueId,
-        })
-        console.log("check user", user)
-        const res = axios({
-            method: 'post',
-            url: 'http://nrms.ipicorp.co:10003/userservice/user/login_s2',
-            data: user,
-            headers: {
-                "content-type": "application/json",
-            }
-        })
-            .then(response => {
-                let userToken = response.data
-                if (userToken.data.username) {
-                    alert("Đăng nhập thành công")
-                    this.setState({
-                        token: userToken.data.token
-                    })
-                    navigation.navigate("ListProduct", {
-                        username: this.state.username,
-                        os: this.state.os,
-                        deviceid: this.state.deviceid,
-                        token: this.state.token
-                    })
-                }
-                else {
-                    alert("sai mật khẩu ")
-                }
-                console.log("check res :", userToken);
+        let { navigation, usernameRedux, tokenRedux } = this.props
+        this.props.userLogin(this.state.username, this.state.password)
+        if (this.state.username === usernameRedux) {
+            navigation.navigate("ListProduct", {
+                username: this.state.username,
+                os: this.state.os,
+                deviceid: this.state.deviceid,
+                token: tokenRedux
             })
-            .catch(error => {
-                console.log(error);
-            })
+        }
+
+
         this.setState({
             os: Platform.OS,
             deviceid: uniqueId,
         })
     }
     render() {
-
-        console.log("check state :", this.state)
+        const { usernameRedux, passwordRedux, userLogin } = this.props
         return (
             <>
-
                 <ImageBackground
                     style={[styles.backgroud]}
                     source={require("../public/background.png")}
@@ -171,7 +146,6 @@ export default class FromLogin extends Component {
                             left: "16.32%",
                             right: "72.91%",
                             top: 590
-
                         }}
                         source={require("../public/icon-24h.png")} />
                 </ImageBackground>
@@ -217,18 +191,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
 
     },
-    // textInput1: {
-    //     top: 378,
-    //     left: 116,
-    //     fontWeight: "normal",
-    //     alignItems: "center",
-    //     textAlign: "center",
-    //     fontFamily: "Roboto",
-    //     color: "#FFFFFF",
-    //     width: 149,
-    //     position: "absolute",
-    //     display: "flex"
-    // },
+
     line1: {
         backgroundColor: "white",
         height: 0.5,
@@ -238,18 +201,6 @@ const styles = StyleSheet.create({
         borderRadius: 40.5,
         position: "absolute",
     },
-    // textInput2: {
-    //     top: 419,
-    //     left: 116,
-    //     fontWeight: "normal",
-    //     alignItems: "center",
-    //     textAlign: "center",
-    //     fontFamily: "Roboto",
-    //     color: "#FFFFFF",
-    //     width: 149,
-    //     position: "absolute",
-    //     display: "flex"
-    // },
     line2: {
         backgroundColor: "white",
         height: 0.5,
@@ -289,3 +240,16 @@ const styles = StyleSheet.create({
         borderWidth: 1
     }
 })
+const mapStateStore = (state) => {
+
+    return {
+        usernameRedux: state.username,
+        tokenRedux: state.token
+    }
+}
+const mapDispath = dispatch => ({
+
+    userLogin: (username, password) => dispatch(Login(username, password))
+
+})
+export default connect(mapStateStore, mapDispath)(FromLogin)

@@ -11,7 +11,8 @@ import {
     ImageBackground,
     FlatList,
     TouchableOpacity,
-    Modal
+    Modal,
+    Platform
 } from 'react-native';
 
 import {
@@ -21,27 +22,28 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+import deviceInfoModule from 'react-native-device-info';
 import axios from 'axios'
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
-
-export default class Product extends Component {
+import { connect } from 'react-redux';
+class Product extends Component {
     state = {
         product_id: "",
         quality: 0,
         ative: true,
         modalVisible: false
     }
-    onPress = () => {
-        const { username, token, deviceid, os, product } = this.props
+    onPress = (aProduct) => {
+        let uniqueId = deviceInfoModule.getUniqueId()
+        const { usernameRedux, tokenRedux, product } = this.props
         let { item } = this.props
         const dataProduct = JSON.stringify({
-            username: username,
-            token: token,
-            deviceid: deviceid,
-            os: os,
+            username: usernameRedux,
+            token: tokenRedux,
+            deviceid: uniqueId,
+            os: Platform.OS,
             type_unit: 1,
             attribute: "[]",
             quantity: 1,
@@ -56,26 +58,13 @@ export default class Product extends Component {
             }
         })
             .then(response => {
-                console.log("check res product :", response);
+                console.log("check res product  :", response);
+                console.log("check dataProduct product  :", dataProduct);
             })
             .catch(error => {
                 console.log(error);
             })
-        this.props.addProduct({
-            id: item.id,
-            image: item.image,
-            name: item.name,
-            price: item.price
-        })
-        this.setState({
-            product_id: item.id,
-            ative: false,
-            username: username,
-            token: token,
-            deviceid: deviceid,
-            os: os,
-            quality: this.state.quality + 1,
-        })
+        this.props.addProduct(aProduct)
         if (this.state.ative === false) {
             this.setState({
                 modalVisible: true
@@ -248,3 +237,16 @@ const styles = StyleSheet.create({
         borderRadius: 63
     }
 })
+const mapStateStore = (state) => {
+
+    return {
+        usernameRedux: state.username,
+        tokenRedux: state.token
+    }
+}
+const mapDispath = (dispatch) => {
+    return {
+        addRedux: (aProduct) => dispatch({ type: "ADD", payload: aProduct })
+    }
+}
+export default connect(mapStateStore, mapDispath)(Product)

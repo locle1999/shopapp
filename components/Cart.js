@@ -11,7 +11,8 @@ import {
     ImageBackground,
     FlatList,
     TouchableOpacity,
-    Modal
+    Modal,
+    Platform
 } from 'react-native';
 
 import {
@@ -26,8 +27,10 @@ import axios from 'axios'
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
+import { connect } from 'react-redux';
+import deviceInfoModule from 'react-native-device-info';
 
-export default class Product extends Component {
+class Cart extends Component {
     state = {
         product_id: "",
         quality: 0,
@@ -36,17 +39,17 @@ export default class Product extends Component {
 
     }
     handleDelete = (aProduct) => {
-        const { username, token, deviceid, os, } = this.props
+        let uniqueId = deviceInfoModule.getUniqueId()
+        const { usernameRedux, tokenRedux, deviceid, os, } = this.props
         let { item } = this.props
         const dataDeleteProduct = JSON.stringify({
-            username: username,
-            token: token,
-            deviceid: deviceid,
-            os: os,
+            username: usernameRedux,
+            token: tokenRedux,
+            deviceid: uniqueId,
+            os: Platform.OS,
             type: 1,
             id: item.id
         })
-        console.log("check state data", dataDeleteProduct)
         axios({
             method: 'post',
             url: 'http://nrms.ipicorp.co:10003/orderservice/order/remove_all',
@@ -105,7 +108,7 @@ export default class Product extends Component {
                                     top: 3.75,
                                     resizeMode: "center"
                                 }}
-                                    source={{ uri: this.props.item.image }} />
+                                    source={{ uri: this.props.item[0].image }} />
                             </IView>
 
                             <IText
@@ -120,7 +123,7 @@ export default class Product extends Component {
                                     fontWeight: '400',
                                     color: "#3C3F3D"
                                 }}
-                            >{this.props.item.name}</IText>
+                            >{this.props.item[0].name}</IText>
                             <IText
                                 style={{
                                     position: "absolute",
@@ -132,7 +135,7 @@ export default class Product extends Component {
                                     fontWeight: 'bold',
                                     color: "#369E69"
                                 }}
-                            >{this.props.item.price}</IText>
+                            >{this.props.item[0].price}</IText>
 
                             <IText style={{
                                 position: "absolute",
@@ -191,7 +194,7 @@ export default class Product extends Component {
                                     lineHeight: 19,
                                     left: 180
                                 }}
-                            >{this.props.item.total_price}</IText>
+                            >{this.props.item[0].total_price}</IText>
                         </IView>
                         <IView style={{
                             position: "absolute",
@@ -227,7 +230,7 @@ export default class Product extends Component {
                                     lineHeight: 19,
                                     left: 180
                                 }}
-                            > {this.props.item.money_discount}</IText>
+                            > {this.props.item[0].money_discount}</IText>
                         </IView>
                     </IView >
 
@@ -249,3 +252,16 @@ const styles = StyleSheet.create({
         borderRadius: 63
     }
 })
+const mapStateStore = (state) => {
+
+    return {
+        usernameRedux: state.username,
+        tokenRedux: state.token
+    }
+}
+const mapDispath = dispatch => ({
+
+
+
+})
+export default connect()(Cart)

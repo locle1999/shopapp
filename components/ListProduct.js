@@ -6,7 +6,8 @@ import IView from "./IView"
 import IText from './IText';
 import Product from './Product';
 import shopping from './shopping';
-export default class ListProduct extends Component {
+import { connect } from 'react-redux';
+class ListProduct extends Component {
     state = {
         username: "",
         os: "",
@@ -19,7 +20,7 @@ export default class ListProduct extends Component {
         arrProduct: []
     }
     componentDidMount() {
-        const { navigation } = this.props
+        const { navigation, tokenRedux, qualityRedux } = this.props
         const { username, token, deviceid, os } = this.props.route.params
         this.setState({
             username: username,
@@ -92,7 +93,7 @@ export default class ListProduct extends Component {
                                 alignSelf: "center",
                                 bottom: 3,
                                 fontSize: 9
-                            }}> 1</IText>
+                            }}> {qualityRedux}</IText>
                         </IView>
                     </IView>
                 </TouchableOpacity>
@@ -109,7 +110,8 @@ export default class ListProduct extends Component {
     }
 
     render() {
-        console.log(" check arrProduct", this.state.arrProduct)
+        const { qualityRedux } = this.props
+        console.log(" check arrProduct", qualityRedux)
         return (
             <>
                 <IView style={{
@@ -139,3 +141,14 @@ export default class ListProduct extends Component {
         )
     }
 }
+const mapStateStore = (state) => {
+    return {
+        usernameRedux: state.username,
+        tokenRedux: state.token,
+        qualityRedux: state.quality
+    }
+}
+const mapDispath = dispatch => ({
+
+})
+export default connect(mapStateStore, mapDispath)(ListProduct)

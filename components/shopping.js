@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
-import { View, Text, FlatList, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, FlatList, SafeAreaView, ScrollView, Platform } from 'react-native'
 import axios from 'axios'
 import Cart from "./Cart"
 import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
-export default class shopping extends Component {
+import deviceInfoModule from 'react-native-device-info';
+import { connect } from 'react-redux';
+import { cartProduct } from '../store/action/listAction';
+
+class shopping extends Component {
     state = {
         username: "",
         os: "",
@@ -14,33 +18,9 @@ export default class shopping extends Component {
         shoppingCart: []
     }
     componentDidMount() {
+        let uniqueId = deviceInfoModule.getUniqueId()
         const { username, token, deviceid, os } = this.props.route.params
-        const res = axios({
-            method: 'get',
-            url: 'http://nrms.ipicorp.co:10003/orderservice/order/get_cart_3_one_attribute',
-            params: {
-                username: username,
-                token: token,
-                deviceid: deviceid,
-                os: os,
-            },
-            headers: {
-                "content-type": "application/json",
-            }
-        })
-            .then(response => {
-                console.log("check res giỏ hàng :", response);
-                this.setState({
-                    shoppingCart: response.data.data.cart_info[0].items,
-                    username: username,
-                    token: token,
-                    deviceid: deviceid,
-                    os: os,
-                })
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        this.props.loadCart(username, token)
     }
     DeleteProduct = (aProduct) => {
         if (this.state.shoppingCart.find(e => e.id === aProduct.id))
@@ -49,13 +29,13 @@ export default class shopping extends Component {
             })
     }
     render() {
-        const { shoppingCart } = this.state
+        const { shoppingCart } = this.props
+        console.log("check shopping cart", shoppingCart)
         return (
             <>
                 <ScrollView>
                     <IView style={{
                         backgroundColor: "white",
-                        // flex: 1,
                         height: 684,
                         left: 0,
                         top: 0,
@@ -86,7 +66,6 @@ export default class shopping extends Component {
                             left: 0
                         }}></IView>
                     </IView>
-
                     <IView
                         style={{
 
@@ -195,3 +174,16 @@ export default class shopping extends Component {
         )
     }
 }
+const mapStateStore = (state) => {
+    return {
+        usernameRedux: state.username,
+        tokenRedux: state.token,
+        shoppingCart: state.dataCart
+    }
+}
+const mapDispath = dispatch => ({
+
+    loadCart: (username, token) => dispatch(cartProduct(username, token))
+
+})
+export default connect(mapStateStore, mapDispath)(shopping)

@@ -29,16 +29,22 @@ import Product from "./components/Product"
 import FromLogin from './components/FromLogin';
 import Nav from './components/Nav';
 import ListProduct from './components/ListProduct';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import listReducer from './store/Reducer/listReducer';
+import thunk from 'redux-thunk';
+const storeReducer = createStore(listReducer, applyMiddleware(thunk))
+
 const App = () => {
 
   return (
     <>
+      <Provider store={storeReducer}>
+        <Nav />
+        {/* <FromLogin /> */}
+        {/* <Product /> */}
 
-      <Nav />
-      {/* <FromLogin /> */}
-      {/* <Product /> */}
-
-
+      </Provider>
     </>
   );
 };

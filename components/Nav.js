@@ -29,11 +29,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ListProduct from './ListProduct';
 import shopping from './shopping';
+
 const Stack = createNativeStackNavigator();
 
 export default class Nav extends Component {
     render() {
         return (
+
             <NavigationContainer>
                 <Stack.Navigator >
                     <Stack.Screen
