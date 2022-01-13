@@ -41,14 +41,14 @@ class Cart extends Component {
     handleDelete = (aProduct) => {
         let uniqueId = deviceInfoModule.getUniqueId()
         const { usernameRedux, tokenRedux, deviceid, os, } = this.props
-        let { item } = this.props
+        let { item, index } = this.props
         const dataDeleteProduct = JSON.stringify({
             username: usernameRedux,
             token: tokenRedux,
             deviceid: uniqueId,
             os: Platform.OS,
             type: 1,
-            id: item.id
+            id: item[index].id
         })
         axios({
             method: 'post',
@@ -59,6 +59,7 @@ class Cart extends Component {
             }
         })
             .then(response => {
+                console.log("check  deleteproduct :", dataDeleteProduct);
                 console.log("check res deleteproduct :", response);
             })
             .catch(error => {
@@ -67,7 +68,9 @@ class Cart extends Component {
         this.props.DeleteProduct(aProduct)
     }
     render() {
+        const { tokenRedux, usernameRedux, index } = this.props
         console.log("check state  cart", this.props.item)
+        console.log("check props username", this.props.usernameRedux)
         return (
             <>
                 <SafeAreaView>
@@ -108,7 +111,7 @@ class Cart extends Component {
                                     top: 3.75,
                                     resizeMode: "center"
                                 }}
-                                    source={{ uri: this.props.item[0].image }} />
+                                    source={{ uri: this.props.item[index].image }} />
                             </IView>
 
                             <IText
@@ -123,7 +126,7 @@ class Cart extends Component {
                                     fontWeight: '400',
                                     color: "#3C3F3D"
                                 }}
-                            >{this.props.item[0].name}</IText>
+                            >{this.props.item[index].name}</IText>
                             <IText
                                 style={{
                                     position: "absolute",
@@ -135,7 +138,7 @@ class Cart extends Component {
                                     fontWeight: 'bold',
                                     color: "#369E69"
                                 }}
-                            >{this.props.item[0].price}</IText>
+                            >{this.props.item[index].price}</IText>
 
                             <IText style={{
                                 position: "absolute",
@@ -194,7 +197,7 @@ class Cart extends Component {
                                     lineHeight: 19,
                                     left: 180
                                 }}
-                            >{this.props.item[0].total_price}</IText>
+                            >{this.props.item[index].total_price}</IText>
                         </IView>
                         <IView style={{
                             position: "absolute",
@@ -230,10 +233,9 @@ class Cart extends Component {
                                     lineHeight: 19,
                                     left: 180
                                 }}
-                            > {this.props.item[0].money_discount}</IText>
+                            > {this.props.item[index].money_discount}</IText>
                         </IView>
                     </IView >
-
                 </SafeAreaView>
 
             </>
@@ -259,9 +261,5 @@ const mapStateStore = (state) => {
         tokenRedux: state.token
     }
 }
-const mapDispath = dispatch => ({
 
-
-
-})
-export default connect()(Cart)
+export default connect(mapStateStore)(Cart)
