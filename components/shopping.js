@@ -20,7 +20,8 @@ class shopping extends Component {
     componentDidMount() {
         let uniqueId = deviceInfoModule.getUniqueId()
         const { username, token, deviceid, os } = this.props.route.params
-        this.props.loadCart(username, token)
+        //this.props.loadCart(username, token)
+        this.props.cartProduct(username, token)
     }
     DeleteProduct = (aProduct) => {
         if (this.state.shoppingCart.find(e => e.id === aProduct.id))
@@ -181,9 +182,5 @@ const mapStateStore = (state) => {
         shoppingCart: state.dataCart
     }
 }
-const mapDispath = dispatch => ({
 
-    loadCart: (username, token) => dispatch(cartProduct(username, token))
-
-})
-export default connect(mapStateStore, mapDispath)(shopping)
+export default connect(mapStateStore, { cartProduct })(shopping)

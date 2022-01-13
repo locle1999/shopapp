@@ -7,6 +7,7 @@ import IText from './IText';
 import Product from './Product';
 import shopping from './shopping';
 import { connect } from 'react-redux';
+import { cartProduct } from '../store/action/listAction';
 class ListProduct extends Component {
     state = {
         username: "",
@@ -45,7 +46,7 @@ class ListProduct extends Component {
             }
         })
             .then(response => {
-                console.log("check res product :", response);
+                console.log("check res product :", response.data.data);
                 this.setState({
                     Product: response.data.data
                 })
@@ -100,14 +101,14 @@ class ListProduct extends Component {
             ),
         })
     }
-    addProduct = (aProduct) => {
-        console.log("check add product", aProduct)
-        if (this.state.arrProduct.find(e => e.id !== aProduct.id)) {
-            this.setState({
-                arrProduct: [...this.state.arrProduct, aProduct],
-            })
-        }
-    }
+    // addProduct = (aProduct) => {
+    //     console.log("check add product", aProduct)
+    //     if (this.state.arrProduct.find(e => e.id !== aProduct.id)) {
+    //         this.setState({
+    //             arrProduct: [...this.state.arrProduct, aProduct],
+    //         })
+    //     }
+    // }
 
     render() {
         const { qualityRedux } = this.props
@@ -148,7 +149,5 @@ const mapStateStore = (state) => {
         qualityRedux: state.quality
     }
 }
-const mapDispath = dispatch => ({
 
-})
-export default connect(mapStateStore, mapDispath)(ListProduct)
+export default connect(mapStateStore)(ListProduct)

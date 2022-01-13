@@ -2,9 +2,7 @@
 let appState = {
     username: "",
     token: "",
-    dataProduct: [],
     quality: 0,
-    active: false,
     dataCart: []
 }
 const listReducer = (state = appState, action) => {
@@ -21,7 +19,6 @@ const listReducer = (state = appState, action) => {
             console.log("product is : ", action)
             return {
                 ...state,
-                dataProduct: [...state.dataProduct, action.payload],
             }
             break;
         case "Load_Data":

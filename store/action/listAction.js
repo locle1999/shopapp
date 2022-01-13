@@ -58,7 +58,7 @@ export const cartProduct = (username, token) => {
             }
         })
             .then(response => {
-                console.log("check res giỏ hàng :", response.data.data.cart_info[0].items);
+                console.log("check res giỏ hàng :", response.data.data.cart_info.items);
                 console.log("check dât giỏ :", username, token,);
                 dispatch(setData(response.data.data.cart_info[0].items))
             })
@@ -70,4 +70,40 @@ export const cartProduct = (username, token) => {
 const setData = (data) => ({
     type: "Load_Data",
     payload: data
+})
+
+export const addProduct = (username, token, item) => {
+    let uniqueId = deviceInfoModule.getUniqueId()
+    const dataProduct = JSON.stringify({
+        username: username,
+        token: token,
+        deviceid: uniqueId,
+        os: Platform.OS,
+        type_unit: 1,
+        attribute: "[]",
+        quantity: 1,
+        product_id: item
+    })
+    return dispatch => {
+        return axios({
+            method: 'post',
+            url: 'http://nrms.ipicorp.co:10003/orderservice/order/add_product_to_cart',
+            data: dataProduct,
+            headers: {
+                "content-type": "application/json",
+            }
+        })
+            .then(response => {
+                console.log("check res product data :", response);
+                console.log("check res data :", dataProduct);
+                dispatch(setDataAddProduct())
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+}
+const setDataAddProduct = () => ({
+    type: "ADD_PRODUCT",
+
 })

@@ -28,55 +28,36 @@ import ITextInput from './ITextInput';
 import IView from "./IView"
 import IText from './IText';
 import { connect } from 'react-redux';
+import { addProduct } from '../store/action/listAction';
+import { cartProduct } from '../store/action/listAction';
 class Product extends Component {
     state = {
         product_id: "",
         quality: 0,
-        ative: true,
+        active: false,
         modalVisible: false
     }
-    onPress = (aProduct) => {
+    handleAdd = () => {
         let uniqueId = deviceInfoModule.getUniqueId()
-        const { usernameRedux, tokenRedux, product } = this.props
+        const { usernameRedux, tokenRedux } = this.props
         let { item } = this.props
-        const dataProduct = JSON.stringify({
-            username: usernameRedux,
-            token: tokenRedux,
-            deviceid: uniqueId,
-            os: Platform.OS,
-            type_unit: 1,
-            attribute: "[]",
-            quantity: 1,
-            product_id: item.id
-        })
-        axios({
-            method: 'post',
-            url: 'http://nrms.ipicorp.co:10003/orderservice/order/add_product_to_cart',
-            data: dataProduct,
-            headers: {
-                "content-type": "application/json",
-            }
-        })
-            .then(response => {
-                console.log("check res product  :", response);
-                console.log("check dataProduct product  :", dataProduct);
+        if (this.props.addProduct(usernameRedux, tokenRedux, item.id) && this.state.active === false) {
+            this.setState({
+                active: true
             })
-            .catch(error => {
-                console.log(error);
-            })
-        this.props.addProduct(aProduct)
-        if (this.state.ative === false) {
+        }
+        if (this.props.addProduct(usernameRedux, tokenRedux, item.id) && this.state.active === true) {
             this.setState({
                 modalVisible: true
             })
         }
-        console.log("check lai product", product)
     }
     setModal = (visible) => {
         this.setState({ modalVisible: visible })
     }
     render() {
-        console.log("check state  product", this.state)
+        const { usernameRedux, tokenRedux, dataProduct } = this.props
+        console.log("check props  product", usernameRedux)
         return (
             <>
                 <IView style={{
@@ -119,7 +100,6 @@ class Product extends Component {
                     }}>{this.props.item.name}</IText>
 
                     <IView style={{
-                        // backgroundColor: "red",
                         marginTop: 9.5,
                         position: "absolute",
                         flexDirection: "row",
@@ -206,25 +186,25 @@ class Product extends Component {
                             </IView>
                         </Modal>
                         <TouchableOpacity
-                            onPress={() => this.onPress()}  >
+                            onPress={() => this.handleAdd()}  >
                             <IView style={{
                                 position: "absolute",
                                 left: 73,
                             }}>
-                                {this.state.ative === true ?
+                                {this.state.active !== true ?
                                     <Image source={require("../public/icon-shopping.png")} />
                                     :
                                     <Image source={require("../public/Union.png")} />}
                             </IView>
-
                         </TouchableOpacity>
                     </IView>
                 </IView >
-
             </>
         )
     }
 }
+
+
 const styles = StyleSheet.create({
 
     button: {
@@ -238,15 +218,9 @@ const styles = StyleSheet.create({
     }
 })
 const mapStateStore = (state) => {
-
     return {
         usernameRedux: state.username,
-        tokenRedux: state.token
+        tokenRedux: state.token,
     }
 }
-const mapDispath = (dispatch) => {
-    return {
-        addRedux: (aProduct) => dispatch({ type: "ADD", payload: aProduct })
-    }
-}
-export default connect(mapStateStore, mapDispath)(Product)
+export default connect(mapStateStore, { addProduct, cartProduct })(Product)
